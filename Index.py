@@ -5,12 +5,12 @@ from functools import cmp_to_key
 
 from player.player import Player
 
-n = int(sys.argv[1])
-m = int(sys.argv[2])
-
-print("=======Welcome to dice game========")
-print("No of Players: " + sys.argv[1])
-print("Max score: " + sys.argv[2])
+try:
+    n = int(sys.argv[1])
+    m = int(sys.argv[2])
+except ValueError:
+    print("Invalid input!!!")
+    sys.exit()
 
 players = dict()
 player_queue = []
@@ -25,26 +25,29 @@ random.shuffle(player_queue)
 initial_queue = [] + player_queue
 
 
+# validating player's score
 def is_valid_score(player, score):
     return (player.get_score() + score) <= m
 
 
+# rolling dice
 def roll_dice(player):
     score = random.randint(1, 6)
-    print("player-" + str(player.get_number()) + " got score " + str(score))
+    print("Player-" + str(player.get_number()) + " got score " + str(score))
 
     if score == 1 and score == player.get_prev_score():
-        print("warning: player-" + str(player.get_number()) + " you have got 1 score twice continuously")
+        print("Warning: Player-" + str(player.get_number()) + " you have got 1 score twice continuously")
 
     return score
 
 
+# add win status to the player
 def add_win(player):
     player.set_won(True)
-    player.set_rank(len(winners) + 1)
     winners.append(player.get_number())
 
 
+# add score to the player
 def add_score(player, score):
     player.set_prev_score(score)
     player.set_score(player.get_score() + score)
@@ -54,6 +57,7 @@ def add_score(player, score):
         player_queue.pop(0)
 
 
+# compare for sorting
 def compare_sort(a, b):
     if a[1] == b[1]:
         return a[1] - b[1]
@@ -61,6 +65,7 @@ def compare_sort(a, b):
     return b[1] - a[1]
 
 
+# display the player's ranking
 def show_rank():
     scores = []
 
@@ -80,6 +85,7 @@ def show_rank():
         i += 1
 
 
+# process the game
 def process_game():
     while True:
         if len(winners) == n:
@@ -111,5 +117,17 @@ def process_game():
                 player_queue.pop(0)
 
 
-process_game()
-
+if n > 1 and m > 0:
+    print("=======Welcome to dice game========")
+    print("No of Players: " + sys.argv[1])
+    print("Max score: " + sys.argv[2])
+    process_game()
+else:
+    if n < 0 or m < 0:
+        print("Max score or number of players can't be negative value")
+    elif n <= 1:
+        print("We require at-least 2 players to play this game.")
+    elif m <= 0:
+        print("Max score can't be less than or equals to zero.")
+    else:
+        print("We can't play the dice with these inputs")

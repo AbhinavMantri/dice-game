@@ -2,7 +2,6 @@ class Player:
     def __init__(self, number):
         self.number = number
         self.score = 0
-        self.rank = 0
         self.won = False
         self.prev_score = 0
 
@@ -11,12 +10,6 @@ class Player:
 
     def set_score(self, score):
         self.score = score
-
-    def get_rank(self):
-        return self.rank
-
-    def set_rank(self, rank):
-        self.rank = rank
 
     def get_won(self):
         return self.won
